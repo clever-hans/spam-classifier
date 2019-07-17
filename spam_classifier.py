@@ -5,6 +5,11 @@ Data source: https://archive.ics.uci.edu/ml/datasets/SMS+Spam+Collection
 
 # read tab-separated file using pandas
 import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 df = pd.read_table('smsspamcollection/SMSSpamCollection', sep='\t', header=None, names=['label', 'sms_message'])  # tab separated, no header, assigns column names
 
 
@@ -17,17 +22,16 @@ df.shape   # gives you the number of rows and columns in the data
 
 
 # split into training and testing sets
-from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(df['sms_message'], 
                                                     df['label'], 
                                                     random_state=1)
+
 print('Number of rows in the total set: {}'.format(df.shape[0]))
 print('Number of rows in the training set: {}'.format(X_train.shape[0]))
 print('Number of rows in the test set: {}'.format(X_test.shape[0]))
 
 
 # start using Bag of Words to count the frequency of words in text and create an instance of CountVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
 count_vector = CountVectorizer()
 print(count_vector) # shows the parameter values automatically included with CountVectorizer
 
@@ -38,14 +42,12 @@ count_vector.get_feature_names() # returns the feature names for the dataset tha
 
 
 # use sklearn.naive_bayes to make predictions
-from sklearn.naive_bayes import MultinomialNB
 naive_bayes = MultinomialNB() # call the method
 naive_bayes.fit(training_data, y_train) # train the classifier on the training set
 predictions = naive_bayes.predict(testing_data)  # make your predictions on the test data and store them in a new variable
 
 
 # evaluate model’s precision, recall, and accuracy
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 print('Accuracy score: ', format(accuracy_score(y_test, predictions)))
 print('Precision score: ', format(precision_score(y_test, predictions)))
 print('Recall score: ', format(recall_score(y_test, predictions)))
